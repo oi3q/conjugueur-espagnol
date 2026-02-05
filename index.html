@@ -1,59 +1,54 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Conjugueur espagnol</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            padding: 30px;
-        }
-        h1 {
-            text-align: center;
-        }
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        pre {
-            background: #eee;
-            padding: 15px;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>Conjugueur espagnol</h1>
-
-    <input type="text" id="verbe" placeholder="Ex : hablar, comer, vivir">
-
-    <button onclick="imparfait()">Imparfait de l'indicatif</button>
-    <button onclick="passeSimple()">Passé simple</button>
-    <button onclick="plusQueParfait()">Plus-que-parfait</button>
-
-    <pre id="resultat"></pre>
-</div>
-
 <script>
+const personnes = ["yo","tú","él/ella","nosotros","vosotros","ellos"];
+
+/* =====================
+   LISTES D’IRRÉGULIERS
+===================== */
+
+// Diphtongue au présent
+const diphtongueE_IE = ["pensar","querer","cerrar","empezar","entender"];
+const diphtongueO_UE = ["poder","volver","dormir","contar","recordar"];
+
+// Affaiblissement (e → i)
+const affaiblissement = ["pedir","servir","repetir","seguir"];
+
+// Verbes totalement irréguliers (présent)
+const presentsIrreguliers = {
+    ser: ["soy","eres","es","somos","sois","son"],
+    estar: ["estoy","estás","está","estamos","estáis","están"],
+    ir: ["voy","vas","va","vamos","vais","van"],
+    tener: ["tengo","tienes","tiene","tenemos","tenéis","tienen"],
+    venir: ["vengo","vienes","viene","venimos","venís","vienen"],
+    hacer: ["hago","haces","hace","hacemos","hacéis","hacen"],
+    decir: ["digo","dices","dice","decimos","decís","dicen"]
+};
+
+// Passé simple irrégulier
+const paseSimpleIrregulier = {
+    ser: ["fui","fuiste","fue","fuimos","fuisteis","fueron"],
+    ir: ["fui","fuiste","fue","fuimos","fuisteis","fueron"],
+    tener: ["tuve","tuviste","tuvo","tuvimos","tuvisteis","tuvieron"],
+    venir: ["vine","viniste","vino","vinimos","vinisteis","vinieron"],
+    hacer: ["hice","hiciste","hizo","hicimos","hicisteis","hicieron"],
+    decir: ["dije","dijiste","dijo","dijimos","dijisteis","dijeron"]
+};
+
+// Participes irréguliers
+const participesIrreguliers = {
+    abrir: "abierto",
+    decir: "dicho",
+    hacer: "hecho",
+    ver: "visto",
+    escribir: "escrito",
+    poner: "puesto",
+    romper: "roto",
+    volver: "vuelto"
+};
+
+/* =====================
+   FONCTIONS UTILES
+===================== */
+
 function getRadical(verbe) {
     return verbe.slice(0, -2);
 }
@@ -62,66 +57,142 @@ function typeVerbe(verbe) {
     return verbe.slice(-2);
 }
 
-function imparfait() {
-    const v = document.getElementById("verbe").value.trim();
-    const r = getRadical(v);
-    const t = typeVerbe(v);
-    let terminaisons;
-
-    if (t === "ar") terminaisons = ["aba","abas","aba","ábamos","abais","aban"];
-    else if (t === "er" || t === "ir") terminaisons = ["ía","ías","ía","íamos","íais","ían"];
-    else return afficher("Verbe invalide");
-
-    afficherConjugaison(r, terminaisons);
+function afficher(txt) {
+    document.getElementById("resultat").textContent = txt;
 }
 
-function passeSimple() {
-    const v = document.getElementById("verbe").value.trim();
-    const r = getRadical(v);
-    const t = typeVerbe(v);
-    let terminaisons;
-
-    if (t === "ar") terminaisons = ["é","aste","ó","amos","asteis","aron"];
-    else if (t === "er" || t === "ir") terminaisons = ["í","iste","ió","imos","isteis","ieron"];
-    else return afficher("Verbe invalide");
-
-    afficherConjugaison(r, terminaisons);
-}
-
-function plusQueParfait() {
-    const v = document.getElementById("verbe").value.trim();
-    const r = getRadical(v);
-    const t = typeVerbe(v);
-
-    let participe;
-    if (t === "ar") participe = r + "ado";
-    else if (t === "er" || t === "ir") participe = r + "ido";
-    else return afficher("Verbe invalide");
-
-    const auxiliaire = ["había","habías","había","habíamos","habíais","habían"];
-    const personnes = ["yo","tú","él/ella","nosotros","vosotros","ellos"];
-
+function afficherListe(liste) {
     let texte = "";
     for (let i = 0; i < 6; i++) {
-        texte += personnes[i] + " " + auxiliaire[i] + " " + participe + "\n";
+        texte += personnes[i] + " " + liste[i] + "\n";
     }
     afficher(texte);
 }
 
 function afficherConjugaison(radical, terminaisons) {
-    const personnes = ["yo","tú","él/ella","nosotros","vosotros","ellos"];
     let texte = "";
-
     for (let i = 0; i < 6; i++) {
         texte += personnes[i] + " " + radical + terminaisons[i] + "\n";
     }
     afficher(texte);
 }
 
-function afficher(txt) {
-    document.getElementById("resultat").textContent = txt;
+/* =====================
+   PRÉSENT (TRÈS COMPLET)
+===================== */
+
+function present() {
+    const v = document.getElementById("verbe").value.trim();
+
+    // Totalement irrégulier
+    if (presentsIrreguliers[v]) {
+        afficherListe(presentsIrreguliers[v]);
+        return;
+    }
+
+    let r = getRadical(v);
+    const t = typeVerbe(v);
+
+    // Diphtongues (sauf nosotros / vosotros)
+    if (diphtongueE_IE.includes(v)) r = r.replace("e","ie");
+    if (diphtongueO_UE.includes(v)) r = r.replace("o","ue");
+
+    // Affaiblissement
+    if (affaiblissement.includes(v)) r = r.replace("e","i");
+
+    if (t === "ar") afficherConjugaison(r, ["o","as","a","amos","áis","an"]);
+    else if (t === "er") afficherConjugaison(r, ["o","es","e","emos","éis","en"]);
+    else if (t === "ir") afficherConjugaison(r, ["o","es","e","imos","ís","en"]);
+    else afficher("Verbe invalide");
+}
+
+/* =====================
+   IMPARFAIT
+===================== */
+
+function imparfait() {
+    const v = document.getElementById("verbe").value.trim();
+    const r = getRadical(v);
+    const t = typeVerbe(v);
+
+    if (v === "ser") {
+        afficherListe(["era","eras","era","éramos","erais","eran"]);
+        return;
+    }
+
+    if (t === "ar") afficherConjugaison(r, ["aba","abas","aba","ábamos","abais","aban"]);
+    else if (t === "er" || t === "ir") afficherConjugaison(r, ["ía","ías","ía","íamos","íais","ían"]);
+    else afficher("Verbe invalide");
+}
+
+/* =====================
+   PASSÉ SIMPLE
+===================== */
+
+function passeSimple() {
+    const v = document.getElementById("verbe").value.trim();
+
+    if (paseSimpleIrregulier[v]) {
+        afficherListe(paseSimpleIrregulier[v]);
+        return;
+    }
+
+    const r = getRadical(v);
+    const t = typeVerbe(v);
+
+    if (t === "ar") afficherConjugaison(r, ["é","aste","ó","amos","asteis","aron"]);
+    else if (t === "er" || t === "ir") afficherConjugaison(r, ["í","iste","ió","imos","isteis","ieron"]);
+    else afficher("Verbe invalide");
+}
+
+/* =====================
+   PARTICIPE PASSÉ
+===================== */
+
+function participePasse(v) {
+    if (participesIrreguliers[v]) return participesIrreguliers[v];
+
+    const r = getRadical(v);
+    const t = typeVerbe(v);
+
+    if (t === "ar") return r + "ado";
+    if (t === "er" || t === "ir") return r + "ido";
+    return null;
+}
+
+/* =====================
+   PASSÉ COMPOSÉ
+===================== */
+
+function passeCompose() {
+    const v = document.getElementById("verbe").value.trim();
+    const part = participePasse(v);
+    if (!part) return afficher("Verbe invalide");
+
+    const haber = ["he","has","ha","hemos","habéis","han"];
+    let texte = "";
+
+    for (let i = 0; i < 6; i++) {
+        texte += personnes[i] + " " + haber[i] + " " + part + "\n";
+    }
+    afficher(texte);
+}
+
+/* =====================
+   PLUS-QUE-PARFAIT
+===================== */
+
+function plusQueParfait() {
+    const v = document.getElementById("verbe").value.trim();
+    const part = participePasse(v);
+    if (!part) return afficher("Verbe invalide");
+
+    const haber = ["había","habías","había","habíamos","habíais","habían"];
+    let texte = "";
+
+    for (let i = 0; i < 6; i++) {
+        texte += personnes[i] + " " + haber[i] + " " + part + "\n";
+    }
+    afficher(texte);
 }
 </script>
-
-</body>
-</html>
