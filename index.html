@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Conjugueur espagnol</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Conjugueur espagnol</h1>
+
+    <input type="text" id="verbe" placeholder="Ex : hablar, comer, vivir">
+
+    <button onclick="imparfait()">Imparfait de l'indicatif</button>
+    <button onclick="passeSimple()">Passé simple</button>
+    <button onclick="plusQueParfait()">Plus-que-parfait</button>
+
+    <pre id="resultat"></pre>
+</div>
+
+<script>
+function getRadical(verbe) {
+    return verbe.slice(0, -2);
+}
+
+function typeVerbe(verbe) {
+    return verbe.slice(-2);
+}
+
+function imparfait() {
+    const v = document.getElementById("verbe").value.trim();
+    const r = getRadical(v);
+    const t = typeVerbe(v);
+    let terminaisons;
+
+    if (t === "ar") terminaisons = ["aba","abas","aba","ábamos","abais","aban"];
+    else if (t === "er" || t === "ir") terminaisons = ["ía","ías","ía","íamos","íais","ían"];
+    else return afficher("Verbe invalide");
+
+    afficherConjugaison(r, terminaisons);
+}
+
+function passeSimple() {
+    const v = document.getElementById("verbe").value.trim();
+    const r = getRadical(v);
+    const t = typeVerbe(v);
+    let terminaisons;
+
+    if (t === "ar") terminaisons = ["é","aste","ó","amos","asteis","aron"];
+    else if (t === "er" || t === "ir") terminaisons = ["í","iste","ió","imos","isteis","ieron"];
+    else return afficher("Verbe invalide");
+
+    afficherConjugaison(r, terminaisons);
+}
+
+function plusQueParfait() {
+    const v = document.getElementById("verbe").value.trim();
+    const r = getRadical(v);
+    const t = typeVerbe(v);
+
+    let participe;
+    if (t === "ar") participe = r + "ado";
+    else if (t === "er" || t === "ir") participe = r + "ido";
+    else return afficher("Verbe invalide");
+
+    const auxiliaire = ["había","habías","había","habíamos","habíais","habían"];
+    const personnes = ["yo","tú","él/ella","nosotros","vosotros","ellos"];
+
+    let texte = "";
+    for (let i = 0; i < 6; i++) {
+        texte += personnes[i] + " " + auxiliaire[i] + " " + participe + "\n";
+    }
+    afficher(texte);
+}
+
+function afficherConjugaison(radical, terminaisons) {
+    const personnes = ["yo","tú","él/ella","nosotros","vosotros","ellos"];
+    let texte = "";
+
+    for (let i = 0; i < 6; i++) {
+        texte += personnes[i] + " " + radical + terminaisons[i] + "\n";
+    }
+    afficher(texte);
+}
+
+function afficher(txt) {
+    document.getElementById("resultat").textContent = txt;
+}
+</script>
+
+</body>
+</html>
